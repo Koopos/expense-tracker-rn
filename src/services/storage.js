@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EXPENSES_KEY = '@expenses';
+const MONTHLY_BUDGETS_KEY = '@monthly_budgets';
 
 // 生成唯一ID
 const generateId = () => {
@@ -103,6 +104,44 @@ export const clearAll = async () => {
         return true;
     } catch (error) {
         console.error('Error clearing data:', error);
+        throw error;
+    }
+};
+
+
+// 获取所有月度预算
+export const getMonthlyBudgets = async () => {
+    try {
+        const data = await AsyncStorage.getItem(MONTHLY_BUDGETS_KEY);
+        return data ? JSON.parse(data) : {};
+    } catch (error) {
+        console.error('Error getting monthly budgets:', error);
+        return {};
+    }
+};
+
+// 获取指定月份预算
+export const getMonthlyBudget = async (monthKey) => {
+    const budgets = await getMonthlyBudgets();
+    return budgets[monthKey] || 0;
+};
+
+// 设置指定月份预算
+export const setMonthlyBudget = async (monthKey, amount) => {
+    try {
+        const budgets = await getMonthlyBudgets();
+        const numericAmount = Number(amount) || 0;
+
+        if (numericAmount <= 0) {
+            delete budgets[monthKey];
+        } else {
+            budgets[monthKey] = numericAmount;
+        }
+
+        await AsyncStorage.setItem(MONTHLY_BUDGETS_KEY, JSON.stringify(budgets));
+        return budgets;
+    } catch (error) {
+        console.error('Error setting monthly budget:', error);
         throw error;
     }
 };

@@ -14,9 +14,11 @@ export const useExpenses = () => {
 export const ExpenseProvider = ({ children }) => {
     const [expenses, setExpenses] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [monthlyBudgets, setMonthlyBudgets] = useState({});
 
     useEffect(() => {
         loadExpenses();
+        loadBudgets();
     }, []);
 
     const loadExpenses = async () => {
@@ -30,6 +32,29 @@ export const ExpenseProvider = ({ children }) => {
             setLoading(false);
         }
     };
+
+
+    const loadBudgets = async () => {
+        try {
+            const data = await storage.getMonthlyBudgets();
+            setMonthlyBudgets(data);
+        } catch (error) {
+            console.error('Failed to load budgets:', error);
+        }
+    };
+
+    const setBudget = async (monthKey, amount) => {
+        try {
+            const updatedBudgets = await storage.setMonthlyBudget(monthKey, amount);
+            setMonthlyBudgets(updatedBudgets);
+            return updatedBudgets;
+        } catch (error) {
+            console.error('Failed to set budget:', error);
+            throw error;
+        }
+    };
+
+    const getBudget = (monthKey) => monthlyBudgets[monthKey] || 0;
 
     const addExpense = async (expenseData) => {
         try {
@@ -120,6 +145,9 @@ export const ExpenseProvider = ({ children }) => {
                 deleteExpense,
                 refreshExpenses: loadExpenses,
                 getStats,
+                monthlyBudgets,
+                getBudget,
+                setBudget,
             }}
         >
             {children}

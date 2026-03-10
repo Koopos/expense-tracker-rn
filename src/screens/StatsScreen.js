@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -8,12 +8,11 @@ import {
     Dimensions,
     TouchableOpacity,
 } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import colors from '../constants/colors';
 import { useExpenses } from '../context/ExpenseContext';
 import MonthYearWheelPicker from '../components/MonthYearWheelPicker';
-import { getCategoryById, categories } from '../constants/categories';
+import { getCategoryById } from '../constants/categories';
 import * as Haptics from 'expo-haptics';
 
 import {
@@ -27,7 +26,7 @@ import {
 const { width } = Dimensions.get('window');
 
 const StatsScreen = () => {
-    const { expenses, getStats: getStatsFromContext, refreshExpenses } = useExpenses();
+    const { expenses, getStats: getStatsFromContext, refreshExpenses, getBudget } = useExpenses();
     const [stats, setStats] = useState({ total: 0, income: 0, expense: 0, byExpense: {}, byIncome: {}, count: 0 });
     const [viewType, setViewType] = useState('month'); // 'month' | 'year'
     const [subViewType, setSubViewType] = useState('expense'); // 'expense' | 'income'
@@ -35,6 +34,11 @@ const StatsScreen = () => {
     const [showPicker, setShowPicker] = useState(false);
 
     const [refreshing, setRefreshing] = useState(false);
+
+    const monthKey = `${selectedDate.getFullYear()}-${`${selectedDate.getMonth() + 1}`.padStart(2, '0')}`;
+    const selectedMonthBudget = viewType === 'month' ? getBudget(monthKey) : 0;
+    const selectedMonthBudgetRate = selectedMonthBudget > 0 ? Math.min((stats.expense / selectedMonthBudget) * 100, 100) : 0;
+    const selectedMonthOverBudget = selectedMonthBudget > 0 && stats.expense > selectedMonthBudget;
 
     useEffect(() => {
         const start = viewType === 'month' ? getMonthStart(selectedDate) : getYearStart(selectedDate);
@@ -167,6 +171,32 @@ const StatsScreen = () => {
                 }}
                 onCancel={() => setShowPicker(false)}
             />
+
+
+            {viewType === 'month' && selectedMonthBudget > 0 && (
+                <View style={styles.budgetSummaryCard}>
+                    <View style={styles.budgetSummaryHeader}>
+                        <Text style={styles.budgetSummaryTitle}>月度预算执行</Text>
+                        <Text style={[styles.budgetSummaryMeta, selectedMonthOverBudget && styles.budgetSummaryOver]}>
+                            {selectedMonthOverBudget
+                                ? `已超支 ${formatAmount(stats.expense - selectedMonthBudget)}`
+                                : `剩余 ${formatAmount(selectedMonthBudget - stats.expense)}`}
+                        </Text>
+                    </View>
+                    <Text style={styles.budgetSummaryMeta}>预算 {formatAmount(selectedMonthBudget)} / 支出 {formatAmount(stats.expense)}</Text>
+                    <View style={styles.budgetSummaryTrack}>
+                        <View
+                            style={[
+                                styles.budgetSummaryFill,
+                                {
+                                    width: `${selectedMonthBudgetRate}%`,
+                                    backgroundColor: selectedMonthOverBudget ? colors.danger : colors.primary,
+                                },
+                            ]}
+                        />
+                    </View>
+                </View>
+            )}
 
             {/* 分类统计 */}
             <View style={styles.section}>
@@ -454,6 +484,42 @@ const styles = StyleSheet.create({
         color: colors.primary,
         fontSize: 13,
         fontWeight: '700',
+    },
+
+    budgetSummaryCard: {
+        backgroundColor: colors.card,
+        borderRadius: 16,
+        padding: 14,
+        marginBottom: 16,
+    },
+    budgetSummaryHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 6,
+    },
+    budgetSummaryTitle: {
+        color: colors.textPrimary,
+        fontSize: 15,
+        fontWeight: '700',
+    },
+    budgetSummaryMeta: {
+        color: colors.textSecondary,
+        fontSize: 12,
+        marginBottom: 8,
+    },
+    budgetSummaryOver: {
+        color: colors.danger,
+    },
+    budgetSummaryTrack: {
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: colors.backgroundSecondary,
+        overflow: 'hidden',
+    },
+    budgetSummaryFill: {
+        height: '100%',
+        borderRadius: 4,
     },
 });
 
