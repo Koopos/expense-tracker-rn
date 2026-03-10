@@ -37,6 +37,8 @@ export const gradients = {
     primary: ['#667eea', '#764ba2'],
     success: ['#48bb78', '#38a169'],
     danger: ['#fc8181', '#f56565'],
+    budget: ['rgba(102, 126, 234, 0.28)', 'rgba(118, 75, 162, 0.18)'],
+    budgetAlert: ['rgba(252, 129, 129, 0.28)', 'rgba(118, 75, 162, 0.16)'],
 };
 
 export default colors;
