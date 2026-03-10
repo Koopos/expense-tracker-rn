@@ -45,6 +45,11 @@ const StatsScreen = () => {
     const selectedMonthBudgetRate = selectedMonthBudget > 0 ? Math.min((stats.expense / selectedMonthBudget) * 100, 100) : 0;
     const selectedMonthOverBudget = selectedMonthBudget > 0 && stats.expense > selectedMonthBudget;
 
+    const monthKey = `${selectedDate.getFullYear()}-${`${selectedDate.getMonth() + 1}`.padStart(2, '0')}`;
+    const selectedMonthBudget = viewType === 'month' ? getBudget(monthKey) : 0;
+    const selectedMonthBudgetRate = selectedMonthBudget > 0 ? Math.min((stats.expense / selectedMonthBudget) * 100, 100) : 0;
+    const selectedMonthOverBudget = selectedMonthBudget > 0 && stats.expense > selectedMonthBudget;
+
     useEffect(() => {
         const start = viewType === 'month' ? getMonthStart(selectedDate) : getYearStart(selectedDate);
         const end = viewType === 'month' ? getMonthEnd(selectedDate) : getYearEnd(selectedDate);
