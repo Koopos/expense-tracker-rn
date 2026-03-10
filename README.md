@@ -1,0 +1,176 @@
+# 记账本 (Expense Tracker)
+
+一个简洁实用的个人记账应用，支持记录收入和支出，提供统计分析功能。
+
+## 功能特性
+
+### 核心功能
+- **收支管理**: 添加、编辑、删除收入和支出记录
+- **分类系统**: 丰富的支出分类，包含育儿专属分类（奶粉、玩具、童装等）
+- **财务仪表盘**: 月度余额概览，收支一目了然
+- **交易历史**: 按时间顺序展示所有交易记录
+- **统计分析**: 月度和年度支出统计，可视化图表展示
+
+### 特色功能
+- **中文界面**: 完全中文化的用户界面
+- **育儿模式**: 专属的育儿支出分类，适合有孩子的家庭
+- **滚轮日期选择器**: 自定义的滚轮式日期选择器，操作便捷
+- **触觉反馈**: 交互时的震动反馈，提升用户体验
+- **深色主题**: 现代化的深色配色方案，渐变背景
+- **离线存储**: 基于 AsyncStorage 的本地数据持久化
+
+## 技术栈
+
+### 核心技术
+- **React Native 0.81.5** - 跨平台移动应用框架
+- **React 19.1.0** - UI 库
+- **Expo 54** - 开发工具链和 SDK
+
+### 导航与 UI
+- **React Navigation 7.x** - 底部标签导航
+- **Expo Linear Gradient** - 渐变背景
+- **Expo Haptics** - 触觉反馈
+- **Ionicons** - 图标库
+- **React Native Safe Area Context** - 安全区域处理
+
+### 数据存储
+- **AsyncStorage** - 本地数据存储
+- **Context API** - 状态管理
+
+## 项目结构
+
+```
+expense-tracker-rn/
+├── App.js                 # 主应用组件和导航配置
+├── app.json              # Expo 配置文件
+├── eas.json              # EAS 构建配置
+├── package.json          # 依赖和脚本
+├── assets/               # 应用图标和图片
+└── src/
+    ├── components/       # 可复用 UI 组件
+    │   ├── ExpenseItem.js
+    │   ├── CategoryPicker.js
+    │   ├── CustomDatePicker.js
+    │   ├── WheelDatePicker.js
+    │   ├── MonthYearPicker.js
+    │   └── WheelPicker.js
+    ├── constants/        # 常量和配置
+    │   ├── colors.js     # 配色方案（深色主题）
+    │   └── categories.js # 支出分类
+    ├── context/          # React Context
+    │   └── ExpenseContext.js
+    ├── screens/          # 主要页面
+    │   ├── HomeScreen.js       # 首页
+    │   ├── AddExpenseScreen.js # 添加记录
+    │   ├── HistoryScreen.js    # 历史记录
+    │   └── StatsScreen.js      # 统计分析
+    ├── services/         # 数据服务
+    │   └── storage.js    # AsyncStorage 操作
+    └── utils/           # 工具函数
+        └── helpers.js    # 辅助函数
+```
+
+## 快速开始
+
+### 环境要求
+
+- Node.js 18+
+- npm 或 yarn
+- Expo CLI
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 运行应用
+
+```bash
+# 启动开发服务器
+npx expo start
+
+# 在 iOS 模拟器运行
+npm run ios
+
+# 在 Android 模拟器运行
+npm run android
+```
+
+### 构建应用
+
+项目使用 EAS (Expo Application Services) 进行构建：
+
+```bash
+# 构建开发版本
+eas build --profile development --platform all
+
+# 构建预览版本
+eas build --profile preview --platform all
+
+# 构建生产版本
+eas build --profile production --platform all
+```
+
+## 支出分类
+
+### 日常支出
+- 餐饮 - 🍔
+- 购物 - 🛍️
+- 交通 - 🚗
+- 娱乐 - 🎮
+- 医疗 - 💊
+- 教育 - 📚
+- 居住 - 🏠
+- 通讯 - 📱
+- 其他 - 📦
+
+### 育儿专属
+- 奶粉 - 🍼
+- 玩具 - 🧸
+- 童装 - 👶
+
+### 收入分类
+- 工资 - 💰
+- 奖金 - 🎁
+- 投资 - 📈
+- 其他收入 - 💵
+
+## 屏幕说明
+
+### 首页 (HomeScreen)
+- 显示当前月度的收入、支出和余额
+- 顶部显示月份切换
+- 快速添加按钮
+
+### 添加记录 (AddExpenseScreen)
+- 收入/支出类型切换
+- 金额输入
+- 分类选择
+- 日期选择（滚轮式）
+- 备注输入
+
+### 历史记录 (HistoryScreen)
+- 按日期分组的交易列表
+- 月份筛选
+- 长按删除记录
+
+### 统计分析 (StatsScreen)
+- 月度支出统计
+- 年度支出统计
+- 分类占比展示
+
+## 开发说明
+
+### 代码规范
+- 使用函数组件和 Hooks
+- Context API 进行状态管理
+- 遵循 React 最佳实践
+- 使用 React.memo 和 useCallback 进行性能优化
+
+### 主题定制
+应用使用深色主题，配色方案定义在 `src/constants/colors.js`，可以根据需要修改。
+
+## 许可证
+
+MIT
