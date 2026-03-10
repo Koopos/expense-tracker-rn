@@ -109,7 +109,12 @@ const HomeScreen = ({ navigation }) => {
                 </View>
             </LinearGradient>
 
-            <View style={styles.budgetCard}>
+            <LinearGradient
+                colors={isOverBudget ? gradients.budgetAlert : gradients.budget}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.budgetCard}
+            >
                 <View style={styles.budgetHeader}>
                     <Text style={styles.budgetTitle}>本月预算</Text>
                     <TouchableOpacity onPress={openBudgetModal}>
@@ -140,7 +145,7 @@ const HomeScreen = ({ navigation }) => {
                 ) : (
                     <Text style={styles.budgetEmpty}>设置月度预算后，可实时查看超支提醒。</Text>
                 )}
-            </View>
+            </LinearGradient>
 
             <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>最近记录</Text>
@@ -228,7 +233,13 @@ const styles = StyleSheet.create({
     statLabel: { color: 'rgba(255,255,255,0.7)', fontSize: 11, marginBottom: 2 },
     statValue: { color: '#fff', fontSize: 15, fontWeight: '700' },
     statDivider: { width: 1, height: 24, backgroundColor: 'rgba(255,255,255,0.1)', marginHorizontal: 15 },
-    budgetCard: { backgroundColor: colors.card, borderRadius: 16, padding: 16, marginBottom: 24 },
+    budgetCard: {
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 24,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.16)',
+    },
     budgetHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8, alignItems: 'center' },
     budgetTitle: { color: colors.textPrimary, fontSize: 16, fontWeight: '700' },
     budgetAction: { color: colors.primary, fontSize: 14, fontWeight: '600' },

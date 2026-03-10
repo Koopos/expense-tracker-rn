@@ -11,7 +11,8 @@ import {
     TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import colors from '../constants/colors';
+import { LinearGradient } from 'expo-linear-gradient';
+import colors, { gradients } from '../constants/colors';
 import { useExpenses } from '../context/ExpenseContext';
 import MonthYearWheelPicker from '../components/MonthYearWheelPicker';
 import { getCategoryById } from '../constants/categories';
@@ -195,7 +196,12 @@ const StatsScreen = () => {
 
 
                 {viewType === 'month' && (
-                    <View style={styles.budgetSummaryCard}>
+                    <LinearGradient
+                        colors={selectedMonthOverBudget ? gradients.budgetAlert : gradients.budget}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={styles.budgetSummaryCard}
+                    >
                         <View style={styles.budgetSummaryHeader}>
                             <Text style={styles.budgetSummaryTitle}>月度预算执行</Text>
                             <TouchableOpacity onPress={openBudgetModal}>
@@ -226,7 +232,7 @@ const StatsScreen = () => {
                         ) : (
                             <Text style={styles.budgetEmptyText}>当前月份未设置预算，点击右上角“设置预算”。</Text>
                         )}
-                    </View>
+                    </LinearGradient>
                 )}
 
                 {/* 分类统计 */}
@@ -543,10 +549,11 @@ const styles = StyleSheet.create({
     },
 
     budgetSummaryCard: {
-        backgroundColor: colors.card,
         borderRadius: 16,
         padding: 14,
         marginBottom: 16,
+        borderWidth: 1,
+        borderColor: 'rgba(255,255,255,0.16)',
     },
     budgetSummaryHeader: {
         flexDirection: 'row',
